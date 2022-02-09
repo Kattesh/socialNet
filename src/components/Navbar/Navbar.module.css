@@ -1,14 +1,14 @@
 .nav {
     grid-area: n;
     background-color: rgb(35, 45, 36);
-    padding: 20px
-
+    padding: 20px;
 }
 
 .item a{
     color: aliceblue;
     text-decoration: none;
     font-size: 22px;
+    text-transform: uppercase;
 }
 
 .item a.activeLink {
