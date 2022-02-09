@@ -6,6 +6,7 @@
 .dialogsItems{
     padding: 10px;
     color: #daead9;
+    font-size: 20px;
 
 }
 .dialogsItems.active{

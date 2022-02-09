@@ -11,10 +11,18 @@ const DialogItem = (props:DialogType) => {
     let path = "/dialogs/" + props.id
 
     return (
-        <div className={s.dialog+' '+s.active}>
+        <div className={s.dialog +' '+ s.active}>
             <NavLink to={path}>{props.name}</NavLink>
         </div>
     )
+}
+type MessageType ={
+    message:string
+}
+const Message = (props:MessageType) =>{
+   return (
+       <div className={s.message}>{props.message}</div>
+   )
 }
 
 const Dialogs = (props: any) => {
@@ -23,16 +31,17 @@ const Dialogs = (props: any) => {
            <div className={s.dialogsItems}>
 
                <DialogItem name="Dima" id={1}/>
-               <DialogItem name="Anna" id={1}/>
-               <DialogItem name="Marta" id={1}/>
-               <DialogItem name="Sveta" id={1}/>
+               <DialogItem name="Anna" id={2}/>
+               <DialogItem name="Marta" id={3}/>
+               <DialogItem name="Sveta" id={4}/>
 
 
            </div>
             <div className={s.messages}>
-                <div className={s.message}>hi</div>
-                <div className={s.message}>how are you doing</div>
-                <div className={s.message}>Goodbye</div>
+                <Message message="Hi"/>
+                <Message message="How are you doing"/>
+                <Message message="Goodbye"/>
+                <Message message="Goodbye"/>
             </div>
         </div>
     )
