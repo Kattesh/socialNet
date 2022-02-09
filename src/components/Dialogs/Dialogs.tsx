@@ -23,13 +23,11 @@ const Dialogs = (props: any) => {
            <div className={s.dialogsItems}>
 
                <DialogItem name="Dima" id={1}/>
+               <DialogItem name="Anna" id={1}/>
+               <DialogItem name="Marta" id={1}/>
+               <DialogItem name="Sveta" id={1}/>
 
-               <div className={s.dialog}>
-                   <NavLink to="/dialogs/2">Anna</NavLink>
-               </div>
-               <div className={s.dialog}>
-                   <NavLink to="/dialogs/3">Marta</NavLink>
-               </div>
+
            </div>
             <div className={s.messages}>
                 <div className={s.message}>hi</div>
