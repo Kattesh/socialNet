@@ -3,42 +3,22 @@ import {useParams} from 'react-router-dom';
 import s from './Dialogs.module.css'
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
+import {DialogsPageType} from "../../redux/state";
 
 
-export type DialogType ={
-    name: string
-    id: number
-}
-export type MessageType ={
-    id:number
-    message:string
-}
 type DialogsPropsType={
-    dialogs:DialogType[]
-    messages:MessageType[]
+    state:DialogsPageType
 }
 
 const Dialogs = (props:DialogsPropsType) => {
 
-    // let dialogs = [
-    //     {id: 1, name: 'Dima'},
-    //     {id: 2, name: 'Anna'},
-    //     {id: 3, name: 'Marta'},
-    //     {id: 4, name: 'Samara'}
-    // ]
-    // let messages = [
-    //     {id: 1, message: 'Hi'},
-    //     {id: 2, message: 'How are you doing'},
-    //     {id: 3, message: 'Goodbye'},
-    //     {id: 4, message: 'Goodbye'}
-    // ]
 const id=useParams()
     console.log(id['*'])
 
-let dialogsElements =props.dialogs.map((d)=>(
+let dialogsElements =props.state.dialogs.map((d)=>(
     <DialogItem name={d.name} id={d.id}/>
 ))
-let messagesElements = props.messages.map((m)=>(
+let messagesElements = props.state.messages.map((m)=>(
     <Message message={m.message} id={m.id}/>
 ))
     return (
