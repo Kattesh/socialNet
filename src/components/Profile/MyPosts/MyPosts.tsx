@@ -2,11 +2,13 @@ import React, {ChangeEvent} from "react";
 import s from './MyPosts.module.css';
 import Post from "./Post/Post";
 import {PostsType} from "../../../App";
+import {ActionsTypes, addPostActionCreator, PostType, updateNewPostTextActionCreator} from "../../../redux/state";
+import avatar from '../../../assets/images/avatar.jpg'
 
 type PropsType = PostsType & {
-    addPost: (postMessage: string) => void
     newPostText:string
-    updateNewPostText:(newPostElement:string)=>void
+    posts: PostType[]
+    dispatch:(action:ActionsTypes)=>void
 }
 
 const MyPosts = (props: PropsType) => {
@@ -16,14 +18,14 @@ const MyPosts = (props: PropsType) => {
     let newPostElement=React.createRef<HTMLTextAreaElement>()
 
     let addPost = () => {
-        if (newPostElement.current?.value) props.addPost(newPostElement.current.value)
+        if (newPostElement.current?.value) props.dispatch(addPostActionCreator())
     }
 
     let onPostChange = (e:ChangeEvent<HTMLTextAreaElement>) => {
-        props.updateNewPostText(e.currentTarget.value)
+        const text = e.currentTarget.value
+        props.dispatch(updateNewPostTextActionCreator(text))
     }
-    // e.currentTarget.value
-    // newPostElement.current?.value
+
     return (
         <div className={s.postsBlock}>
             <h3>My posts</h3>

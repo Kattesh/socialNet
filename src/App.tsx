@@ -5,7 +5,7 @@ import Navbar from './components/Navbar/Navbar';
 import Profile from './components/Profile/Profile';
 import Dialogs from "./components/Dialogs/Dialogs";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import { PostType, RootStateType} from "./redux/state";
+import {ActionsTypes, PostType, RootStateType, StoreType} from "./redux/state";
 
 export type PostsType = {
     posts: PostType[]
@@ -13,12 +13,12 @@ export type PostsType = {
 
 export type AppPropsType={
     state:RootStateType
-    addPost:(postMessage:string)=>void
-    updateNewPostText:(newPostElement:string)=>void
+    dispatch:(action:ActionsTypes) => void
+    store: StoreType
+
 }
 
-function App(props:AppPropsType) {
-
+function App(props: AppPropsType) {
   return (
       <BrowserRouter>
           <div className='app-wrapper'>
@@ -26,11 +26,10 @@ function App(props:AppPropsType) {
               <Navbar />
               <div className='app-wrapper-content'>
                   <Routes>
-                      <Route path='/dialogs/*' element={<Dialogs state ={props.state.dialogsPage}/>} />
+                      <Route path='/dialogs/*' element={<Dialogs store={props.store} />}/>
                       <Route path='/profile' element={<Profile
                           profilePage={props.state.profilePage}
-                          addPost={props.addPost}
-                          updateNewPostText={props.updateNewPostText}
+                          dispatch={props.dispatch}
                       />}/>
                       {/*<Route path='/news' element={<News/>}/>*/}
                       {/*<Route path='/music' element={<Music/>}/>*/}
