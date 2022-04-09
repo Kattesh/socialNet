@@ -5,3 +5,6 @@
     border-radius: 22px;
     margin: 10px;
 }
+.selectedPage{
+    font-weight: bold;
+}
