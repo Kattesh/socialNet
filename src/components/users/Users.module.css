@@ -8,3 +8,9 @@
 .selectedPage{
     font-weight: bold;
 }
+.pages{
+    cursor: pointer;
+    font-size: 15px;
+    color: #aedf70;
+
+}
