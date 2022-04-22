@@ -25,6 +25,7 @@ export const dialogsReducer = (state:DialogsPageInitialStateType = initialState,
 
     switch (action.type) {
         case UPDATE_NEW_MESSAGE_BODY:
+            // @ts-ignore
             return {...state, newMessageBody: action.body}
 
         case SEND_MESSAGE:
@@ -35,5 +36,5 @@ export const dialogsReducer = (state:DialogsPageInitialStateType = initialState,
             return state
     }
 }
-export const sendMessageCreator = () => ({type: SEND_MESSAGE} as const)
-export const updateNewMessageBodyCreator = (body: string) => ({type: UPDATE_NEW_MESSAGE_BODY, body: body} as const)
+export const sendMessageCreator = () => ({type: SEND_MESSAGE})
+export const updateNewMessageBodyCreator = (body: string) => ({type: UPDATE_NEW_MESSAGE_BODY, body})
