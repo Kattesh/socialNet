@@ -1,4 +1,4 @@
-import {combineReducers, createStore} from "redux";
+import {applyMiddleware, combineReducers, createStore} from "redux";
 import {
     addPostActionCreator,
     profileReducer,
@@ -9,6 +9,7 @@ import {dialogsReducer, sendMessageCreator, updateNewMessageBodyCreator} from ".
 import {sidebarReducer} from "./sidebar-reducer";
 import {usersReducer} from "./users-reducer";
 import authReducer, {setAuthUserData} from "./auth-reducer";
+import thunk, {ThunkAction} from "redux-thunk";
 
 export type ActionsTypes =
     ReturnType<typeof addPostActionCreator> |
@@ -18,6 +19,8 @@ export type ActionsTypes =
     ReturnType<typeof setUserProfileAC> |
     ReturnType<typeof setAuthUserData>
 
+
+export type ThunkType <ReturnType = void> = ThunkAction<ReturnType, StateType, unknown, ActionsTypes>
 
 
 let reducers = combineReducers({
@@ -30,6 +33,6 @@ let reducers = combineReducers({
 })
 
 export type StateType = ReturnType<typeof reducers>
-let store = createStore(reducers)
+let store = createStore(reducers, applyMiddleware(thunk))
 
 export default store;

@@ -3,13 +3,13 @@ import s from './Dialogs.module.css'
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
 import {DialogsPageInitialStateType} from "../../redux/dialogs-reducer";
-
-
+import {Navigate} from "react-router-dom";
 
 type DialogsPropsType = {
     dialogsPage: DialogsPageInitialStateType
     updateNewMessageBody: (body: string) => void
     sendMessage: () => void
+    isAuth: boolean
 }
 
 const Dialogs = (props: DialogsPropsType) => {
@@ -19,7 +19,7 @@ const Dialogs = (props: DialogsPropsType) => {
         <DialogItem name={d.name} key={d.id} id={d.id}/>
     ))
     let messagesElements = state.messages.map((m) => (
-        <Message message={m.message} key={m.id}  id={m.id}/>
+        <Message message={m.message} key={m.id} id={m.id}/>
     ))
     let newMessageBody = state.newMessageBody
     const onSendMessageClick = () => {
@@ -29,6 +29,9 @@ const Dialogs = (props: DialogsPropsType) => {
         let body = e.target.value
         props.updateNewMessageBody(body)
     }
+
+    // if (!props.isAuth) return <Navigate to={"/login"}/>
+
     return (
         <div className={s.dialogs}>
             <div className={s.dialogsItems}>
@@ -41,7 +44,7 @@ const Dialogs = (props: DialogsPropsType) => {
                       <textarea value={newMessageBody}
                                 placeholder='Enter your message'
                                 onChange={onNewMessageChange}
-                      ></textarea>
+                      />
                     </div>
                     <div>
                         <button onClick={onSendMessageClick}>Send</button>

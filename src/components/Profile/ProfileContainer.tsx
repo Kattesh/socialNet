@@ -1,62 +1,48 @@
 import React, {ComponentType} from 'react';
 import Profile from "./Profile";
-import axios from "axios";
 import {connect} from "react-redux";
-import {StateType} from "../../redux/redux-store";
-import {ProfileType, setUserProfileAC} from "../../redux/profile-reducer";
+import {StateType, ThunkType} from "../../redux/redux-store";
+import {getUserProfileTC, ProfileType} from "../../redux/profile-reducer";
 import {Location, NavigateFunction, Params, useLocation, useNavigate, useParams} from "react-router-dom";
-
+import {withAuthRedirect} from "../../hoc/withAuthRedirect";
+import {compose} from "redux";
 
 type MapStatePropsType = {
     profile: ProfileType | null
 }
 type MapDispatchPropsType = {
-    setUserProfileAC: (profile: ProfileType) => void
+    // setUserProfileAC: (profile: ProfileType) => void
+    getUserProfileTC(userId: number): ThunkType
 }
 type WithRouterType = Location & NavigateFunction & Readonly<Params<string>>
-// type PropsType = MapStatePropsType & MapDispatchPropsType
-// function ProfileContainer(props: PropsType) {
-//     useEffect(  () => {
-//         let userId = props.match.params.userId;
-//         if(!userId){
-//             userId=2
-//         }
-//         axios.get(`https://social-network.samuraijs.com/api/1.0/profile/`+userId)
-//             .then (response => {
-//                 props.setUserProfile(response.data);
-//             });
-//     },  [])
-//     return (
-//         <Profile profile={props.profile}/>
-//     );
-// }
 
-type Props = MapStatePropsType & MapDispatchPropsType
-
-class ProfileContainer extends React.Component<Props & { router: WithRouterType }, any> {
+class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPropsType & { router: WithRouterType }, any> {
     componentDidMount() {
-        const url = window.location.href;
-        // @ts-ignore
-        const {userId} = this.props.router.params
-        //const userId = url.split('/').splice(-1)[0];
-        if (!userId) {
+        // const url = window.location.href;
+        // const userId = url.split('/').splice(-1)[0];
 
+        // @ts-ignore
+        let {userId} = this.props.router.params
+        if (!userId) {
+            userId = 2
         }
-        axios.get(`https://social-network.samuraijs.com/api/1.0/profile/` + userId)
-            .then(response => {
-                this.props.setUserProfileAC(response.data)
-            })
+        this.props.getUserProfileTC(userId)
     }
 
     render() {
         return (
-            <Profile {...this.props} profile={this.props.profile!}/>
+            <div>
+                <Profile {...this.props} profile={this.props.profile!}/>
+            </div>
         )
     }
 }
 
-function withRouter<T>(Container: ComponentType<T>) {
 
+let mapStateToProps = (state: StateType): MapStatePropsType => ({
+    profile: state.profilePage.profile,
+})
+function withRouter<T>(Container: ComponentType<T>) {
     function ComponentWithRouterProp(props: T & WithRouterType) {
         let location = useLocation();
         let navigate = useNavigate();
@@ -68,15 +54,17 @@ function withRouter<T>(Container: ComponentType<T>) {
             />
         );
     }
-
     return ComponentWithRouterProp
 }
 
-let mapStateToProps = (state: StateType): MapStatePropsType => ({
-    profile: state.profilePage.profile
-})
+export default compose<React.ComponentType>(
+    connect(mapStateToProps, {getUserProfileTC}),
+    withRouter,
+    // withAuthRedirect
+)(ProfileContainer)
 
 
-const needComponent = connect(mapStateToProps, {setUserProfileAC})(ProfileContainer);
 
-export default withRouter<any>(needComponent)
+
+
+

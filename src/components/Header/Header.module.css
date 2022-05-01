@@ -8,6 +8,9 @@
 }
 .loginBlock{
     float: right;
+    color:wheat;
+    font-size: 20px;
+    padding: 10px;
 }
 .loginBlock a{
     color:white;
