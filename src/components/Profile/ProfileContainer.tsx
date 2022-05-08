@@ -1,38 +1,41 @@
-import React, {ComponentType} from 'react';
+import React from 'react';
 import Profile from "./Profile";
 import {connect} from "react-redux";
 import {StateType, ThunkType} from "../../redux/redux-store";
-import {getUserProfileTC, ProfileType} from "../../redux/profile-reducer";
+import {getStatus, getUserProfileTC, ProfileType, updateStatus} from "../../redux/profile-reducer";
 import {Location, NavigateFunction, Params, useLocation, useNavigate, useParams} from "react-router-dom";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
 
 type MapStatePropsType = {
     profile: ProfileType | null
+    status:string
 }
 type MapDispatchPropsType = {
     // setUserProfileAC: (profile: ProfileType) => void
     getUserProfileTC(userId: number): ThunkType
+    getStatus:(userId:number)=>void
+    updateStatus:(status:string)=>void
 }
-type WithRouterType = Location & NavigateFunction & Readonly<Params<string>>
+type WithRouterType = Location & NavigateFunction & Readonly<Params>
 
-class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPropsType & { router: WithRouterType }, any> {
+class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPropsType & { router: any }, any> {
     componentDidMount() {
         // const url = window.location.href;
         // const userId = url.split('/').splice(-1)[0];
-
-        // @ts-ignore
-        let {userId} = this.props.router.params
-        if (!userId) {
-            userId = 2
+        console.log(this.props.router.params.id)
+        let id =this.props.router.params.id
+        if (!id) {
+            id = 1049
         }
-        this.props.getUserProfileTC(userId)
+        this.props.getUserProfileTC(id)
+        this.props.getStatus(id)
     }
 
     render() {
         return (
             <div>
-                <Profile {...this.props} profile={this.props.profile!}/>
+                <Profile {...this.props} profile={this.props.profile!} status={this.props.status} updateStatus={this.props.updateStatus}/>
             </div>
         )
     }
@@ -41,8 +44,9 @@ class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPr
 
 let mapStateToProps = (state: StateType): MapStatePropsType => ({
     profile: state.profilePage.profile,
+    status:state.profilePage.status
 })
-function withRouter<T>(Container: ComponentType<T>) {
+function withRouter<T>(Container: React.FC<T>) {
     function ComponentWithRouterProp(props: T & WithRouterType) {
         let location = useLocation();
         let navigate = useNavigate();
@@ -58,7 +62,7 @@ function withRouter<T>(Container: ComponentType<T>) {
 }
 
 export default compose<React.ComponentType>(
-    connect(mapStateToProps, {getUserProfileTC}),
+    connect(mapStateToProps, {getUserProfileTC, getStatus, updateStatus}),
     withRouter,
     // withAuthRedirect
 )(ProfileContainer)

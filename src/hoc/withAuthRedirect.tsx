@@ -1,5 +1,5 @@
 import {Navigate} from "react-router-dom";
-import React, {ComponentType} from "react";
+import React from "react";
 import {connect} from "react-redux";
 import {StateType} from "../redux/redux-store";
 
@@ -13,7 +13,7 @@ const mapStateToProps = (state: StateType): MapStatePropsType => {
     }
 }
 
-export function withAuthRedirect<T>(Component: ComponentType<T>) {
+export function withAuthRedirect<T>(Component: React.FC<T>) {
     const RedirectComponent = (props: MapStatePropsType) => {
         let {isAuth, ...restProps} = props
         //если не залогинен, то на страницу логина перебрасывает

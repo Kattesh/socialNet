@@ -1,15 +1,20 @@
-import React, {ChangeEvent} from 'react';
+import React from 'react';
 import s from './Dialogs.module.css'
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
 import {DialogsPageInitialStateType} from "../../redux/dialogs-reducer";
 import {Navigate} from "react-router-dom";
+import {Form, Field} from 'react-final-form'
+import {Textarea} from "../common/FormControls/FormsControl";
+import {composeValidators, maxLengthCreator, required} from "../../utils/validators/validators";
 
-type DialogsPropsType = {
+
+type DialogsPropsType = AddMessageType & {
     dialogsPage: DialogsPageInitialStateType
-    updateNewMessageBody: (body: string) => void
-    sendMessage: () => void
     isAuth: boolean
+}
+type AddMessageType = {
+    sendMessage: (newMessageBody: string) => void
 }
 
 const Dialogs = (props: DialogsPropsType) => {
@@ -21,38 +26,37 @@ const Dialogs = (props: DialogsPropsType) => {
     let messagesElements = state.messages.map((m) => (
         <Message message={m.message} key={m.id} id={m.id}/>
     ))
-    let newMessageBody = state.newMessageBody
-    const onSendMessageClick = () => {
-        props.sendMessage()
-    }
-    const onNewMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        let body = e.target.value
-        props.updateNewMessageBody(body)
-    }
 
     // if (!props.isAuth) return <Navigate to={"/login"}/>
 
     return (
         <div className={s.dialogs}>
-            <div className={s.dialogsItems}>
-                {dialogsElements}
-            </div>
+            <div className={s.dialogsItems}>{dialogsElements}</div>
             <div className={s.messages}>
                 <div> {messagesElements}</div>
-                <div>
-                    <div>
-                      <textarea value={newMessageBody}
-                                placeholder='Enter your message'
-                                onChange={onNewMessageChange}
-                      />
-                    </div>
-                    <div>
-                        <button onClick={onSendMessageClick}>Send</button>
-                    </div>
-                </div>
+                <AddMessageForm sendMessage={props.sendMessage}/>
             </div>
         </div>
     )
 }
 
+const AddMessageForm = (props: AddMessageType) => {
+    let addNewMessage = (values: { newMessageBody: string }) => {
+        props.sendMessage(values.newMessageBody)
+    }
+    return (
+        <Form onSubmit={addNewMessage}>
+            {({handleSubmit, pristine, form, submitting}) => (
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <Field name="newMessageBody" validate={composeValidators(required,maxLengthCreator(30))} component={Textarea}placeholder="Enter your message"/>
+                    </div>
+                    <div>
+                        <button>Send</button>
+                    </div>
+                </form>
+            )}
+        </Form>
+    )
+}
 export default Dialogs;

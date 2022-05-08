@@ -2,9 +2,8 @@ import React from "react";
 import styles from "./Users.module.css";
 import userPhoto from "../../assets/images/user.jpeg";
 import {NavLink} from "react-router-dom";
-import { UserType} from "../../redux/users-reducer";
-
-
+import {FilterType, UserType} from "../../redux/users-reducer";
+import {UsersSearchForm} from "./UsersSearchForm";
 
 
 type UserPropsType = {
@@ -12,11 +11,12 @@ type UserPropsType = {
     pageSize: number
     totalUsersCount: number
     currentPage: number
-    followingInProgress:number[]
+    followingInProgress: number[]
     follow: (userId: number) => void
     unfollow: (userId: number) => void
     onPageChanged: (page: number) => void
-    toggleFollowingProgress: (isFetching: boolean, userId:number) => void
+    onFilterChanged: (filter: FilterType) => void
+    toggleFollowingProgress: (isFetching: boolean, userId: number) => void
 
 
 }
@@ -30,6 +30,7 @@ export let Users = (props: UserPropsType) => {
     }
 
     return <div>
+        <UsersSearchForm onFilterChanged={props.onFilterChanged}/>
         <div className={styles.pages}>
             {pages.map(p => {
                 return <span key={p} className={props.currentPage === p ? styles.selectedPage : ''} onClick={(e) => {
@@ -50,10 +51,14 @@ export let Users = (props: UserPropsType) => {
                     </div>
                     <div>
                         {u.followed ?
-                            <button disabled={props.followingInProgress.some(id=>id===u.id)} onClick={() => {props.unfollow( u.id)}}>
+                            <button disabled={props.followingInProgress.some(id => id === u.id)} onClick={() => {
+                                props.unfollow(u.id)
+                            }}>
                                 Unfollow</button>
-                            : <button disabled={props.followingInProgress.some(id=>id===u.id)} onClick={() => {props.follow( u.id)}}>
-                            Follow</button>}
+                            : <button disabled={props.followingInProgress.some(id => id === u.id)} onClick={() => {
+                                props.follow(u.id)
+                            }}>
+                                Follow</button>}
                     </div>
                 </span>
                 <span>

@@ -28,4 +28,8 @@
     -webkit-user-select: none;
     width: auto;
 }
+/*button[disabled] {*/
+/*     opacity: 0.6;*/
+/*     cursor: not-allowed;*/
+/* }*/
 

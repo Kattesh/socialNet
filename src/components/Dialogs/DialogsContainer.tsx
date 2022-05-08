@@ -2,13 +2,11 @@ import React from 'react';
 import {
     DialogsPageInitialStateType,
     sendMessageCreator,
-    updateNewMessageBodyCreator
 } from "../../redux/dialogs-reducer";
 import Dialogs from "./Dialogs";
 import {connect} from "react-redux";
 import {ActionsTypes, StateType} from "../../redux/redux-store";
 import {compose, Dispatch} from "redux";
-
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 
 type MapStatePropsType = {
@@ -16,8 +14,7 @@ type MapStatePropsType = {
 }
 
 type MapDispatchPropsType = {
-    updateNewMessageBody: (body: string) => void
-    sendMessage: () => void
+    sendMessage: (newMessageBody:string) => void
 }
 let mapStateToProps = (state: StateType): MapStatePropsType => {
     return {
@@ -26,11 +23,8 @@ let mapStateToProps = (state: StateType): MapStatePropsType => {
 }
 let mapDispatchToProps = (dispatch: Dispatch<ActionsTypes>): MapDispatchPropsType => {
     return {
-        updateNewMessageBody: (body: string) => {
-            dispatch(updateNewMessageBodyCreator(body))
-        },
-        sendMessage: () => {
-            dispatch(sendMessageCreator())
+        sendMessage: (newMessageBody:string) => {
+            dispatch(sendMessageCreator(newMessageBody))
         }
     }
 }

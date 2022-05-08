@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from "./Header";
 import {connect} from "react-redux";
-import {StateType, ThunkType} from "../../redux/redux-store";
+import {StateType} from "../../redux/redux-store";
 import {getAuthUserDataTC} from "../../redux/auth-reducer";
 
 
@@ -11,7 +11,7 @@ type MapStatePropsType = {
 }
 type MapDispatchPropsType = {
     // setAuthUserData: (data: InitialAuthStateType) => void
-    getAuthUserDataTC(): ThunkType
+    getAuthUserDataTC:()=> void
 }
 type PropsType = MapDispatchPropsType & MapStatePropsType
 
@@ -19,7 +19,6 @@ class HeaderContainer extends React.Component<PropsType, any> {
     componentDidMount() {
         this.props.getAuthUserDataTC()
     }
-
     render() {
         return <Header {...this.props}/>
     }

@@ -10,22 +10,61 @@ const instance = axios.create({
 })
 
 export const usersAPI = {
-    getUsers(currentPage = 1, pageSize = 10) {
-        return instance.get(`users?page=${currentPage}&count=${pageSize}`)
+    getUsers(currentPage = 1, pageSize = 10,term:string='', friend:null|boolean=null) {
+        return instance.get(`users?page=${currentPage}&count=${pageSize}&term=${term}`+ (friend===null? '':`&friend=${friend}`))
             .then(response => response.data)
     },
     follow(userId: number) {
-        return instance.post(`/follow/${userId}`)
+        return instance.post(`follow/${userId}`)
     },
     unfollow(userId: number) {
         return instance.delete(`follow/${userId}`)
     },
     getProfile(userId: number) {
-        return instance.get(`/profile/` + userId)
+        return profileAPI.getProfile(userId)
     }
 }
+export const profileAPI = {
+    getProfile(userId: number) {
+        return instance.get(`profile/` + userId)
+    },
+    getStatus(userId: number) {
+        return instance.get(`profile/status/` + userId)
+    },
+    updateStatus(status: string) {
+        return instance.put(`profile/status`, {status})
+    }
+
+}
+
+export enum ResultCodes {
+    success,
+    error,
+    CaptchaIsRequired = 10
+}
+
+export type ResponseType<D = {}> = {
+    data: D
+    messages: Array<string>
+    resultCode: ResultCodes
+}
+type MeResponseDataType = {
+    id: number
+    email: string
+    login: string
+}
+// type LoginResponseType = {
+//      userId: number
+// }
 export const authAPI = {
     me() {
-        return instance.get(`auth/me`)
-    }
+        return instance.get<ResponseType<MeResponseDataType>>(`auth/me`)
+    },
+    // login(email: string, password:string, rememberMe = false, captcha:null|string = null) {
+    //     return instance.post<ResponseType<LoginResponseType>>(`auth/login`, {email, password, rememberMe, captcha})
+    //     .then(res=>res.data);
+    // },
+    // logout() {
+    //     return instance.delete(`auth/login`);
+    // }
 }
