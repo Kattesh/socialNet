@@ -41,7 +41,6 @@ class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPr
     }
 }
 
-
 let mapStateToProps = (state: StateType): MapStatePropsType => ({
     profile: state.profilePage.profile,
     status:state.profilePage.status

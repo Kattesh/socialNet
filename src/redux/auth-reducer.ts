@@ -1,9 +1,8 @@
 import {ThunkType} from "./redux-store";
 import {authAPI, ResultCodes} from "../api/api";
 
-
 let initialState = {
-    userId: null as (number | null),
+    userId: null as number | null,
     email: null as string | null,
     login: null as string | null,
     isAuth: true,
@@ -15,18 +14,14 @@ type setAuthUserDataType = ReturnType<typeof setAuthUserData>
 export const authReducer = (state: InitialAuthStateType = initialState, action: setAuthUserDataType): InitialAuthStateType => {
     switch (action.type) {
         case 'SET_USER_DATA': {
-            return {
-                ...state,
-                ...action.data
-            }
+            return {...state, ...action.payload}
         }
         default:
             return state
     }
 }
-
-export const setAuthUserData = (data: InitialAuthStateType) => ({type: 'SET_USER_DATA', data} as const)
-export const getAuthUserDataTC = ():ThunkType => (dispatch) => {
+export const setAuthUserData = (payload: InitialAuthStateType) => ({type: 'SET_USER_DATA', payload} as const)
+export const getAuthUserDataTC = (): ThunkType => (dispatch) => {
     authAPI.me()
         .then(response => {
             if (response.data.resultCode === ResultCodes.success) {
@@ -35,6 +30,26 @@ export const getAuthUserDataTC = ():ThunkType => (dispatch) => {
             }
         })
 }
+
+export const login = (email: string, password: string, rememberMe: boolean, captcha: string) => (dispatch: any) => {
+    authAPI.login(email, password, rememberMe, captcha)
+        .then(response => {
+
+            if (response.resultCode=== ResultCodes.success) {
+                dispatch(getAuthUserDataTC())
+            }
+        })
+}
+export const logout= ()  =>(dispatch:any) =>{
+    authAPI.logout()
+        .then(response => {
+            if (response.data.resultCode === ResultCodes.success) {
+                dispatch(setAuthUserData({userId: null, email: null, login:null, isAuth: false}))
+            }
+        })
+}
+export default authReducer
+
 // export const login =(email:string, password:string, rememberMe:boolean, captcha:string)=>async(dispatch:any)=>{
 //     let data=await authAPI.login(email, password, rememberMe, captcha)
 //     if(data.resultCode===ResultCodes.success){
@@ -44,7 +59,4 @@ export const getAuthUserDataTC = ():ThunkType => (dispatch) => {
 //             dispatch(getCaptchaUrl())
 //         }
 //     }
-//
 // }
-
-export default authReducer

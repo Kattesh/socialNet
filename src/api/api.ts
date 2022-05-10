@@ -1,5 +1,4 @@
-import axios from "axios";
-
+import axios, {AxiosResponse} from "axios";
 
 const instance = axios.create({
     withCredentials: true,
@@ -10,8 +9,8 @@ const instance = axios.create({
 })
 
 export const usersAPI = {
-    getUsers(currentPage = 1, pageSize = 10,term:string='', friend:null|boolean=null) {
-        return instance.get(`users?page=${currentPage}&count=${pageSize}&term=${term}`+ (friend===null? '':`&friend=${friend}`))
+    getUsers(currentPage = 1, pageSize = 10, term: string = '', friend: null | boolean = null) {
+        return instance.get(`users?page=${currentPage}&count=${pageSize}&term=${term}` + (friend === null ? '' : `&friend=${friend}`))
             .then(response => response.data)
     },
     follow(userId: number) {
@@ -34,7 +33,6 @@ export const profileAPI = {
     updateStatus(status: string) {
         return instance.put(`profile/status`, {status})
     }
-
 }
 
 export enum ResultCodes {
@@ -42,29 +40,28 @@ export enum ResultCodes {
     error,
     CaptchaIsRequired = 10
 }
-
 export type ResponseType<D = {}> = {
-    data: D
-    messages: Array<string>
     resultCode: ResultCodes
+    messages: Array<string>
+    data: D
 }
 type MeResponseDataType = {
     id: number
     email: string
     login: string
 }
-// type LoginResponseType = {
-//      userId: number
-// }
+type LoginResponseType = {
+    userId: number
+}
 export const authAPI = {
     me() {
         return instance.get<ResponseType<MeResponseDataType>>(`auth/me`)
     },
-    // login(email: string, password:string, rememberMe = false, captcha:null|string = null) {
-    //     return instance.post<ResponseType<LoginResponseType>>(`auth/login`, {email, password, rememberMe, captcha})
-    //     .then(res=>res.data);
-    // },
-    // logout() {
-    //     return instance.delete(`auth/login`);
-    // }
+    login(email: string, password: string, rememberMe = false, captcha: null | string = null) {
+        return instance.post<ResponseType<LoginResponseType>>(`auth/login`, {email, password, rememberMe, captcha})
+            .then(res => res.data)
+    },
+    logout() {
+        return instance.delete(`auth/login`)
+    }
 }

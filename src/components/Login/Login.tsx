@@ -2,29 +2,38 @@ import React from "react";
 import {Form, Field} from 'react-final-form'
 import {Input} from "../common/FormControls/FormsControl";
 import {composeValidators, maxLengthCreator, minLengthCreator, required} from "../../utils/validators/validators";
+import {connect} from "react-redux";
+import {login} from "../../redux/auth-reducer";
+import {useNavigate} from "react-router-dom";
+import {StateType} from "../../redux/redux-store";
 
+type MDPType = {
+    login: (email: string, password: string, rememberMe: boolean, captcha: string) => void
+}
+type FormDataType = {
+    password: string
+    rememberMe: boolean
+    email: string
+}
 
-// type FormDataType={
-//     login:string
-//     password:string
-//     rememberMe:boolean
-// }
-
-const LoginReduxForm = () => {
+const LoginReduxForm = (props: MDPType) => {
+    let onSubmit = (formData: FormDataType) => {
+        props.login(formData.email, formData.password, formData.rememberMe, '')
+    }
     return (
         <Form
             initialValues={{login: ''}}
-            onSubmit={(formData) => {
-                console.log(formData)}}
+            onSubmit={onSubmit}
         >
             {({handleSubmit, pristine, form, submitting}) => (
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <Field name="login" validate={composeValidators(required, maxLengthCreator(30))}
-                               component={Input} placeholder="login"/>
+                        <Field name="email" validate={composeValidators(required, maxLengthCreator(30))}
+                               component={Input} placeholder="Email"/>
                     </div>
                     <div>
-                        <Field name="password" validate={composeValidators(required, maxLengthCreator(30), minLengthCreator(7))}
+                        <Field type='password' name="password"
+                               validate={composeValidators(required, maxLengthCreator(30), minLengthCreator(7))}
                                component={Input} placeholder="password"/>
                     </div>
                     <div>
@@ -35,6 +44,7 @@ const LoginReduxForm = () => {
                         <button type="submit" disabled={submitting}>Submit</button>
                         <button type="button"
                                 disabled={pristine || submitting}
+                            // @ts-ignore
                                 onClick={form.reset}>
                             Clear Values
                         </button>
@@ -44,9 +54,21 @@ const LoginReduxForm = () => {
         </Form>
     )
 }
-export const Login = (props: any) => {
+type mapStateToPropsType = {
+    isAuth: boolean
+}
+const Login = (props: mapStateToPropsType & MDPType) => {
+const navigate=useNavigate()
+    if (props.isAuth) {
+        navigate("/profile")
+    }
     return <div>
         <h1>LOGIN</h1>
-        <LoginReduxForm/>
+        <LoginReduxForm login={props.login}/>
     </div>
 }
+const mapStateToProps = (state: StateType): mapStateToPropsType => ({
+    isAuth: state.auth.isAuth
+})
+export default connect<mapStateToPropsType, MDPType, {}, StateType>(mapStateToProps, {login})(Login)
+// с помощью hoc connect образовалась контейнерная компонента, в {} ссылки на санккреаторы , создадутся коллбэки, которые диспатчат вызов санккреатора
