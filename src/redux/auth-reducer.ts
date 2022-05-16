@@ -1,12 +1,13 @@
 import {ThunkType} from "./redux-store";
 import {authAPI, ResultCodes} from "../api/api";
 
+
 let initialState = {
     userId: null as number | null,
     email: null as string | null,
     login: null as string | null,
     isAuth: true,
-    // captchaUrl:null as string|null,//if null, then captcha is not required
+    captchaUrl:null as string|null,//if null, then captcha is not required
 }
 export type InitialAuthStateType = typeof initialState
 type setAuthUserDataType = ReturnType<typeof setAuthUserData>
@@ -26,7 +27,7 @@ export const getAuthUserDataTC = (): ThunkType => (dispatch) => {
         .then(response => {
             if (response.data.resultCode === ResultCodes.success) {
                 let {id, login, email} = response.data.data;
-                dispatch(setAuthUserData({userId: id, email, login, isAuth: true}))
+                dispatch(setAuthUserData({userId: id, email, login, isAuth: true, captchaUrl: null}))
             }
         })
 }
@@ -34,9 +35,12 @@ export const getAuthUserDataTC = (): ThunkType => (dispatch) => {
 export const login = (email: string, password: string, rememberMe: boolean, captcha: string) => (dispatch: any) => {
     authAPI.login(email, password, rememberMe, captcha)
         .then(response => {
-
             if (response.resultCode=== ResultCodes.success) {
                 dispatch(getAuthUserDataTC())
+                // }else{
+                //     if(response.resultCode===ResultCodes.CaptchaIsRequired){
+                //         dispatch(getCaptchaUrl())
+                //     }}
             }
         })
 }
@@ -44,7 +48,7 @@ export const logout= ()  =>(dispatch:any) =>{
     authAPI.logout()
         .then(response => {
             if (response.data.resultCode === ResultCodes.success) {
-                dispatch(setAuthUserData({userId: null, email: null, login:null, isAuth: false}))
+                dispatch(setAuthUserData({userId: null, email: null, login:null, isAuth: false, captchaUrl: null}))
             }
         })
 }

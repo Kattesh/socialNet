@@ -7,7 +7,6 @@
 .formControl.error input,
 .formControl.error textarea{
     border: 2px  #8a1d1d solid;
-
 }
 .formControl.error span{
     color: #8a1d1d;
@@ -15,5 +14,11 @@
     margin:10px;
     display: inline-block;
     vertical-align: top;
+}
+.formSummaryError{
+    border: 2px  #8a1d1d solid;
+    padding: 5px;
+    color: #8a1d1d;
 
 }
+

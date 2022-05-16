@@ -84,7 +84,7 @@ export const usersReducer = (state: InitialStateType = initialState, action: Act
     }
 }
 //action creators
-export const actions={}
+// export const actions={}
 export const followSuccess = (userId: number) => ({type: 'FOLLOW', userId} as const)
 export const unfollowSuccess = (userId: number) => ({type: 'UNFOLLOW', userId} as const)
 export const setUsers = (users: Array<UserType>) => ({type: 'SET-USERS', users} as const)

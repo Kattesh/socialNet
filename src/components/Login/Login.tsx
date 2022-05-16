@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import {login} from "../../redux/auth-reducer";
 import {useNavigate} from "react-router-dom";
 import {StateType} from "../../redux/redux-store";
+import style from '../common/FormControls/FormsControl.module.css'
 
 type MDPType = {
     login: (email: string, password: string, rememberMe: boolean, captcha: string) => void
@@ -40,8 +41,11 @@ const LoginReduxForm = (props: MDPType) => {
                         <label>remember me</label>
                         <Field name="rememberMe" component={Input} type="checkbox"/>
                     </div>
+                    {/*{props.error && <div className={style.formSummaryError}>*/}
+                    {/*    error*/}
+                    {/*</div>}*/}
                     <div>
-                        <button type="submit" disabled={submitting}>Submit</button>
+                        <button type="submit" disabled={submitting}>Login</button>
                         <button type="button"
                                 disabled={pristine || submitting}
                             // @ts-ignore
@@ -58,7 +62,7 @@ type mapStateToPropsType = {
     isAuth: boolean
 }
 const Login = (props: mapStateToPropsType & MDPType) => {
-const navigate=useNavigate()
+    const navigate = useNavigate()
     if (props.isAuth) {
         navigate("/profile")
     }

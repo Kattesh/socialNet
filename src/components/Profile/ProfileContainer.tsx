@@ -9,13 +9,15 @@ import {compose} from "redux";
 
 type MapStatePropsType = {
     profile: ProfileType | null
-    status:string
+    status: string
+    authorizedUserId: number | null,
+    isAuth: boolean
 }
 type MapDispatchPropsType = {
     // setUserProfileAC: (profile: ProfileType) => void
     getUserProfileTC(userId: number): ThunkType
-    getStatus:(userId:number)=>void
-    updateStatus:(status:string)=>void
+    getStatus: (userId: number) => void
+    updateStatus: (status: string) => void
 }
 type WithRouterType = Location & NavigateFunction & Readonly<Params>
 
@@ -23,10 +25,10 @@ class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPr
     componentDidMount() {
         // const url = window.location.href;
         // const userId = url.split('/').splice(-1)[0];
-        console.log(this.props.router.params.id)
-        let id =this.props.router.params.id
+        // console.log(this.props.router.params.id)
+        let id = this.props.router.params.id
         if (!id) {
-            id = 1049
+            id = this.props.authorizedUserId
         }
         this.props.getUserProfileTC(id)
         this.props.getStatus(id)
@@ -34,17 +36,21 @@ class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPr
 
     render() {
         return (
-            <div>
-                <Profile {...this.props} profile={this.props.profile!} status={this.props.status} updateStatus={this.props.updateStatus}/>
-            </div>
+            <Profile {...this.props}
+                     profile={this.props.profile!}
+                     status={this.props.status}
+                     updateStatus={this.props.updateStatus}/>
         )
     }
 }
 
 let mapStateToProps = (state: StateType): MapStatePropsType => ({
     profile: state.profilePage.profile,
-    status:state.profilePage.status
+    status: state.profilePage.status,
+    authorizedUserId: state.auth.userId,
+    isAuth: state.auth.isAuth
 })
+
 function withRouter<T>(Container: React.FC<T>) {
     function ComponentWithRouterProp(props: T & WithRouterType) {
         let location = useLocation();
@@ -57,6 +63,7 @@ function withRouter<T>(Container: React.FC<T>) {
             />
         );
     }
+
     return ComponentWithRouterProp
 }
 
