@@ -29,6 +29,9 @@ class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPr
         let id = this.props.router.params.id
         if (!id) {
             id = this.props.authorizedUserId
+            // if(!id){
+            //     this.props.history.push('/login')
+            // }
         }
         this.props.getUserProfileTC(id)
         this.props.getStatus(id)

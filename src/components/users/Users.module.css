@@ -5,12 +5,3 @@
     border-radius: 22px;
     margin: 10px;
 }
-.selectedPage{
-    font-weight: bold;
-}
-.pages{
-    cursor: pointer;
-    font-size: 15px;
-    color: #aedf70;
-
-}

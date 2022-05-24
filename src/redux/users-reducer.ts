@@ -1,8 +1,8 @@
 import {usersAPI} from "../api/api";
-import { StateType} from "./redux-store";
+import {StateType} from "./redux-store";
 import {ThunkAction} from "redux-thunk";
+import {updateObjectInArray} from "../utils/object-helpers";
 
-//
 // type ActionsTypes=InferActionsTypes<typeof actions>
 // type ThunkType=BaseThunkType<ActionsTypes>
 
@@ -13,7 +13,7 @@ export type ActionsUsersTypes =
     ReturnType<typeof setCurrentPage> |
     ReturnType<typeof setTotalUsersCount> |
     ReturnType<typeof toggleIsFetching> |
-    ReturnType<typeof toggleFollowingProgress>|
+    ReturnType<typeof toggleFollowingProgress> |
     ReturnType<typeof setFilter>
 
 
@@ -34,7 +34,7 @@ export type UserType = {
 }
 
 type InitialStateType = typeof initialState
-export type FilterType= typeof initialState.filter
+export type FilterType = typeof initialState.filter
 let initialState = {
     users: [] as Array<UserType>,
     pageSize: 6,
@@ -42,9 +42,9 @@ let initialState = {
     currentPage: 1,
     isFetching: true,
     followingInProgress: [] as Array<number>,//array of users ids
-    filter:{
+    filter: {
         term: '',
-        friend: null as null| boolean
+        friend: null as null | boolean
     }
 }
 
@@ -52,6 +52,7 @@ export const usersReducer = (state: InitialStateType = initialState, action: Act
     switch (action.type) {
         case 'FOLLOW': {
             return {...state, users: state.users.map(u => u.id === action.userId ? {...u, followed: true} : u)}
+            // return {...state, users: updateObjectInArray( state.users,action.userId, 'id', [followed:true] )}
         }
         case "UNFOLLOW": {
             return {...state, users: state.users.map(u => u.id === action.userId ? {...u, followed: false} : u)}
@@ -68,8 +69,8 @@ export const usersReducer = (state: InitialStateType = initialState, action: Act
         case "TOGGLE-IS-FETCHING": {
             return {...state, isFetching: action.isFetching}
         }
-        case 'SET-FILTER':{
-            return {...state,filter:action.payload}
+        case 'SET-FILTER': {
+            return {...state, filter: action.payload}
         }
         case "TOGGLE-IS-FOLLOWING-PROGRESS": {
             return {
@@ -83,13 +84,13 @@ export const usersReducer = (state: InitialStateType = initialState, action: Act
             return state
     }
 }
-//action creators
+
 // export const actions={}
 export const followSuccess = (userId: number) => ({type: 'FOLLOW', userId} as const)
 export const unfollowSuccess = (userId: number) => ({type: 'UNFOLLOW', userId} as const)
 export const setUsers = (users: Array<UserType>) => ({type: 'SET-USERS', users} as const)
 export const setCurrentPage = (currentPage: number) => ({type: 'SET-CURRENT-PAGE', currentPage} as const)
-export const setFilter= (filter:FilterType) => ({type: 'SET-FILTER', payload:filter} as const)
+export const setFilter = (filter: FilterType) => ({type: 'SET-FILTER', payload: filter} as const)
 export const setTotalUsersCount = (totalUsersCount: number) => ({
     type: 'SET-TOTAL-USERS-COUNT',
     totalUsersCount
@@ -114,40 +115,32 @@ export const toggleFollowingProgress = (isFetching: boolean, userId: number) => 
 
 
 //ThunkCreator
-export const getUsers = (currentPage: number, pageSize: number): ThunkType => {
-    return (dispatch) => {
+export const requestUsers = (page: number, pageSize: number): ThunkType => {
+    return async (dispatch) => {
         dispatch(toggleIsFetching(true))
+        dispatch(setCurrentPage(page))
 
-        usersAPI.getUsers(currentPage, pageSize)
-            .then(data => {
-                dispatch(toggleIsFetching(false))
-                dispatch(setUsers(data.items))
-                dispatch(setTotalUsersCount(data.totalCount))
-            })
+        let data = await usersAPI.getUsers(page, pageSize)
+        dispatch(toggleIsFetching(false))
+        dispatch(setUsers(data.items))
+        dispatch(setTotalUsersCount(data.totalCount))
     }
 }
-
+const followUnfollowFlow = async (dispatch, userId, apiMethod, actionCreator) => {
+    dispatch(toggleFollowingProgress(true, userId))
+    let response = await apiMethod(userId)
+    if (response.data.resultCode === 0) {
+        dispatch(actionCreator(userId))
+    }
+    dispatch(toggleFollowingProgress(false, userId))
+}
 export const follow = (userId: number): ThunkType => {
-    return (dispatch) => {
-        dispatch(toggleFollowingProgress(true, userId))
-        usersAPI.follow(userId)
-            .then(response => {
-                if (response.data.resultCode === 0) {
-                    dispatch(followSuccess(userId))
-                }
-                dispatch(toggleFollowingProgress(false, userId))
-            })
+    return async (dispatch) => {
+        followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), followSuccess)
     }
 }
 export const unfollow = (userId: number): ThunkType => {
-    return (dispatch) => {
-        dispatch(toggleFollowingProgress(true, userId))
-        usersAPI.unfollow(userId)
-            .then(response => {
-                if (response.data.resultCode === 0) {
-                    dispatch(unfollowSuccess(userId))
-                }
-                dispatch(toggleFollowingProgress(false, userId))
-            })
+    return async (dispatch) => {
+        followUnfollowFlow(dispatch, userId, usersAPI.unfollow.bind(usersAPI), unfollowSuccess)
     }
 }

@@ -1,5 +1,11 @@
 import {StateType} from "../../redux/redux-store";
 
+export const getUsers=(state:StateType)=>{
+    return state.usersPage.users
+}
+export const getPageSize = (state: StateType) => {
+    return state.usersPage.pageSize
+}
 export const getTotalUsersCount = (state: StateType) => {
     return state.usersPage.totalUsersCount;
 }
@@ -15,3 +21,5 @@ export const getFollowingInProgress = (state: StateType) => {
 export const getUsersFilter = (state: StateType) => {
     return state.usersPage.filter;
 }
+
+
