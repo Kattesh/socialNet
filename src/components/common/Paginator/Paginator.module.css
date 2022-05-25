@@ -1,8 +1,12 @@
-.selectedPage{
-    font-weight: bold;
+.paginator{
+    margin: 10px;
+    height: 30px;
 }
-.pages{
+.pageNumber{
     cursor: pointer;
     font-size: 15px;
     color: #aedf70;
+}
+.pageNumber.selectedPage{
+    font-weight: bold;
 }

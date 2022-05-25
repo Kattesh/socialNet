@@ -1,18 +1,18 @@
-import React from "react";
+import React, {FC} from "react";
 import styles from "./Users.module.css";
 import userPhoto from "../../assets/images/user.jpeg";
 import {NavLink} from "react-router-dom";
 import { UserType} from "../../redux/users-reducer";
 
 
-type UserPropsType = {
+type PropsType = {
     user: UserType
     followingInProgress: number[]
     follow: (userId: number) => void
     unfollow: (userId: number) => void
 }
 
-export let User = (props: UserPropsType) => {
+export const User:FC<PropsType> = ({user, followingInProgress, follow, unfollow}) => {
     return <div>
                 <span>
                     <div>
@@ -24,12 +24,12 @@ export let User = (props: UserPropsType) => {
                     </div>
                     <div>
                         {user.followed ?
-                            <button disabled={props.followingInProgress.some(id => id === user.id)} onClick={() => {
-                                props.unfollow(user.id)
+                            <button disabled={followingInProgress.some(id => id === user.id)} onClick={() => {
+                                unfollow(user.id)
                             }}>
                                 Unfollow</button>
-                            : <button disabled={props.followingInProgress.some(id => id === user.id)} onClick={() => {
-                                props.follow(user.id)
+                            : <button disabled={followingInProgress.some(id => id === user.id)} onClick={() => {
+                                follow(user.id)
                             }}>
                                 Follow</button>}
                     </div>

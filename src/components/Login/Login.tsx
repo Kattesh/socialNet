@@ -12,6 +12,7 @@ type MDPType = {
     login: (email: string, password: string, rememberMe: boolean, captcha: string) => void
 }
 type FormDataType = {
+    captcha:string
     password: string
     rememberMe: boolean
     email: string
@@ -19,8 +20,12 @@ type FormDataType = {
 
 const LoginReduxForm = (props: MDPType) => {
     let onSubmit = (formData: FormDataType) => {
-        props.login(formData.email, formData.password, formData.rememberMe, '')
+        props.login(formData.email, formData.password, formData.rememberMe, formData.captcha)
     }
+    // if (props.isAuth){
+    //     return <Redirect to={'/profile'}/>
+    // }
+    //
     return (
         <Form
             initialValues={{login: ''}}
@@ -60,6 +65,7 @@ const LoginReduxForm = (props: MDPType) => {
 }
 type mapStateToPropsType = {
     isAuth: boolean
+    captchaUrl: string|null
 }
 const Login = (props: mapStateToPropsType & MDPType) => {
     const navigate = useNavigate()
@@ -72,6 +78,7 @@ const Login = (props: mapStateToPropsType & MDPType) => {
     </div>
 }
 const mapStateToProps = (state: StateType): mapStateToPropsType => ({
+    captchaUrl:state.auth.captchaUrl,
     isAuth: state.auth.isAuth
 })
 export default connect<mapStateToPropsType, MDPType, {}, StateType>(mapStateToProps, {login})(Login)

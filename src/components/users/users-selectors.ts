@@ -1,5 +1,11 @@
 import {StateType} from "../../redux/redux-store";
 
+
+// export const getUsers=creteSelector(getUsersSelector,
+//     (users)=>{
+//     return users.filter(u=>true)
+// }
+
 export const getUsers=(state:StateType)=>{
     return state.usersPage.users
 }

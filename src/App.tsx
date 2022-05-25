@@ -1,21 +1,22 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import { Route, Routes} from "react-router-dom";
-import DialogsContainer from "./components/Dialogs/DialogsContainer";
-import UsersContainer from "./components/users/UsersContainer";
-import ProfileContainer from "./components/Profile/ProfileContainer";
+import  {UsersPage} from "./components/users/UsersContainer";
+// import DialogsContainer from "./components/Dialogs/DialogsContainer";
+// import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
 import {StateType} from "./redux/redux-store";
 import {Preloader} from "./components/common/Preloader/Preloader";
-
-
+const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
+const ProfileContainer = React.lazy(() => import("./components/Profile/ProfileContainer"));
 const App = () => {
 
     // componentDidMount() {
     //     this.props.initializeApp()
     // }
+    // render(){
     // if(!this.props.initialized){
     //     return <Preloader/>
 // }
@@ -26,11 +27,16 @@ const App = () => {
                 <Navbar/>
                 <div className='app-wrapper-content'>
                     <Routes>
-                        <Route path='/dialogs/*' element={<DialogsContainer/>}/>
-                        <Route path='/profile' element={<ProfileContainer/>}/>
+                        <Route path='/dialogs/*' element={
+                           <Suspense fallback={<Preloader/>} > <DialogsContainer/></Suspense>
+                           }/>
+                        <Route path='/profile' element={
+                            <Suspense fallback={<Preloader/>} > <ProfileContainer/></Suspense>
+                            }/>
                         <Route path='/profile/:id' element={<ProfileContainer/>}/>
-                        <Route path='/users' element={<UsersContainer/>}/>
+                        <Route path='/users' element={<UsersPage pageTitle={'Samurai'}/>}/>
                         <Route path='/login' element={<Login/>}/>
+                        <Route path='*' element={<div>404 not found</div>}/>
 
                         {/*<Route path='/news' element={<News/>}/>*/}
                         {/*<Route path='/music' element={<Music/>}/>*/}
