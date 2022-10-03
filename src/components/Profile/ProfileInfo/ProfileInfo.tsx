@@ -117,4 +117,4 @@ const ProfileDataForm = ({profile}: any) => {
 }
 
 
-export default ProfileInfo
+

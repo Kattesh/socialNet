@@ -14,12 +14,13 @@ type MapStatePropsType = {
     isAuth: boolean
 }
 type MapDispatchPropsType = {
-    // setUserProfileAC: (profile: ProfileType) => void
-    getUserProfileTC(userId: number): ThunkType
+    getUserProfileTC: (userId: number) => ThunkType
     getStatus: (userId: number) => void
     updateStatus: (status: string) => void
     savePhoto: (file: any) => void
+    saveProfile: (profile: ProfileType) => Promise<{}>
 }
+
 type WithRouterType = Location & NavigateFunction & Readonly<Params>
 
 class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPropsType & { router: any }, any> {
@@ -50,13 +51,16 @@ class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPr
     }
 
     render() {
+        const {profile, status, updateStatus, savePhoto, saveProfile} = this.props;
         return (
             <Profile {...this.props}
                      isOwner={!this.props.router.params.id}
-                     profile={this.props.profile!}
-                     status={this.props.status}
-                     updateStatus={this.props.updateStatus}
-                     savePhoto={this.props.savePhoto}
+                     profile={profile!}
+                     status={status}
+                     updateStatus={updateStatus}
+                     savePhoto={savePhoto}
+                     saveProfile={saveProfile}
+
             />
         )
     }

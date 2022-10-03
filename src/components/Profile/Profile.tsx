@@ -1,7 +1,8 @@
 import React from 'react';
-import ProfileInfo from "./ProfileInfo/ProfileInfo";
+
 import {MyPostsContainer} from "./MyPosts/MyPostsContainer";
 import {ProfileType} from "../../redux/profile-reducer";
+import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
 
 
 export type ProfileInfoPropsType = {
@@ -20,7 +21,9 @@ const Profile = (props: ProfileInfoPropsType) => {
                          isOwner={props.isOwner}
                          profile={props.profile}
                          status={props.status}
-                         updateStatus={props.updateStatus}/>
+                         updateStatus={props.updateStatus}
+                         saveProfile={props.saveProfile}
+            />
             <MyPostsContainer/>
         </div>
     )
