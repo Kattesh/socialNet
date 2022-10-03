@@ -9,7 +9,7 @@ import {Provider} from "react-redux";
 import {BrowserRouter, HashRouter} from "react-router-dom";
 
     ReactDOM.render(
-        <HashRouter basename={process.env.PUBLIC_URL}>
+        <HashRouter >
         <Provider store={store}>
             <App/>
         </Provider>

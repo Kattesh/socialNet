@@ -2,3 +2,14 @@
     padding: 10px;
 }
 
+.mainPhoto {
+    max-width: 150px;
+    border-radius: 10px;
+
+}
+
+.contact {
+    padding-left: 10px;
+    color:white;
+}
+

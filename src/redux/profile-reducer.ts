@@ -1,5 +1,6 @@
 import {ThunkType} from "./redux-store";
 import {profileAPI, ResultCodes, usersAPI} from "../api/api";
+import profile from "../components/Profile/Profile";
 
 export type PostType = {
     id: number
@@ -31,7 +32,8 @@ type ActionsTypes =
     ReturnType<typeof addPostAC> |
     ReturnType<typeof setUserProfileAC> |
     ReturnType<typeof setStatus> |
-    ReturnType<typeof deletePost>
+    ReturnType<typeof deletePost> |
+    ReturnType<typeof savePhotoSuccess>
 
 type InitialStateType = typeof initialState
 let initialState = {
@@ -83,6 +85,9 @@ export const profileReducer = (state: InitialStateType = initialState, action: A
         case 'DELETE-POST': {
             return {...state, posts: state.posts.filter(p => p.id !== action.postId)}
         }
+        case 'SET_PHOTO_SUCCESS': {
+            return {...state, profile: {...state.profile, photos: action.photos}}
+        }
         case 'SET_STATUS': {
             return {...state, status: action.status}
         }
@@ -94,6 +99,7 @@ export const addPostAC = (newPostText: string) => ({type: 'ADD-POST', newPostTex
 export const deletePost = (postId: number) => ({type: 'DELETE-POST', postId} as const)
 export const setUserProfileAC = (profile: ProfileType) => ({type: 'SET-USER-PROFILE', profile} as const)
 export const setStatus = (status: string) => ({type: 'SET_STATUS', status} as const)
+export const savePhotoSuccess = (photos: any) => ({type: 'SET_PHOTO_SUCCESS', photos} as const)
 
 export const getUserProfileTC = (userId: number): ThunkType => async (dispatch) => {
     let response = await usersAPI.getProfile(userId)
@@ -107,5 +113,11 @@ export const updateStatus = (status: string): ThunkType => async (dispatch) => {
     let response = await profileAPI.updateStatus(status)
     if (response.data.resultCode === ResultCodes.success) {
         dispatch(setStatus(status))
+    }
+}
+export const savePhoto = (file: File): ThunkType => async (dispatch) => {
+    let response = await profileAPI.savePhoto(file)
+    if (response.data.resultCode === ResultCodes.success) {
+        dispatch(savePhotoSuccess(response.data.data.photos))
     }
 }

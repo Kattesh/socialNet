@@ -2,7 +2,7 @@ import React from 'react';
 import Profile from "./Profile";
 import {connect} from "react-redux";
 import {StateType, ThunkType} from "../../redux/redux-store";
-import {getStatus, getUserProfileTC, ProfileType, updateStatus} from "../../redux/profile-reducer";
+import {getStatus, getUserProfileTC, ProfileType, savePhoto, updateStatus} from "../../redux/profile-reducer";
 import {Location, NavigateFunction, Params, useLocation, useNavigate, useParams} from "react-router-dom";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
@@ -18,11 +18,13 @@ type MapDispatchPropsType = {
     getUserProfileTC(userId: number): ThunkType
     getStatus: (userId: number) => void
     updateStatus: (status: string) => void
+    savePhoto: (file: any) => void
 }
 type WithRouterType = Location & NavigateFunction & Readonly<Params>
 
 class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPropsType & { router: any }, any> {
-    componentDidMount() {
+
+    refreshProfile() {
         // const url = window.location.href;
         // const userId = url.split('/').splice(-1)[0];
         // console.log(this.props.router.params.id)
@@ -37,12 +39,25 @@ class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPr
         this.props.getStatus(id)
     }
 
+    componentDidMount() {
+
+        this.refreshProfile()
+    }
+
+    componentDidUpdate(prevProps: Readonly<MapStatePropsType & MapDispatchPropsType & { router: any }>, prevState: Readonly<any>, snapshot?: any) {
+        if (this.props.router.params.id !== prevProps.router.params.id)
+            this.refreshProfile()
+    }
+
     render() {
         return (
             <Profile {...this.props}
+                     isOwner={!this.props.router.params.id}
                      profile={this.props.profile!}
                      status={this.props.status}
-                     updateStatus={this.props.updateStatus}/>
+                     updateStatus={this.props.updateStatus}
+                     savePhoto={this.props.savePhoto}
+            />
         )
     }
 }
@@ -71,7 +86,7 @@ function withRouter<T>(Container: React.FC<T>) {
 }
 
 export default compose<React.ComponentType>(
-    connect(mapStateToProps, {getUserProfileTC, getStatus, updateStatus}),
+    connect(mapStateToProps, {getUserProfileTC, getStatus, updateStatus, savePhoto}),
     withRouter,
     // withAuthRedirect
 )(ProfileContainer)

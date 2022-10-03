@@ -30,7 +30,7 @@ const App = () => {
                         <Route path='/dialogs/*' element={
                            <Suspense fallback={<Preloader/>} > <DialogsContainer/></Suspense>
                            }/>
-                        <Route path='/profile' element={
+                        <Route path='/profile/*' element={
                             <Suspense fallback={<Preloader/>} > <ProfileContainer/></Suspense>
                             }/>
                         <Route path='/profile/:id' element={<ProfileContainer/>}/>
