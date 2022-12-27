@@ -10,3 +10,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Test application
         run: npm run test
+      - name: Testing
+        run: echo testing...
+
