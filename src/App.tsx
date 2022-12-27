@@ -11,22 +11,23 @@ import {StateType} from "./redux/redux-store";
 import {Preloader} from "./components/common/Preloader/Preloader";
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
 const ProfileContainer = React.lazy(() => import("./components/Profile/ProfileContainer"));
+
 const App = () => {
 
     // componentDidMount() {
     //     this.props.initializeApp()
     // }
     // render(){
-    // if(!this.props.initialized){
+    // if(!props.initialized){
     //     return <Preloader/>
 // }
     return (
 
-            <div className='app-wrapper'>
+            <div className='app'>
                 <HeaderContainer/>
-                <Navbar/>
-                <div className='app-wrapper-content'>
+                <div className='wrapper'>
                     <Routes>
+                        <Route path='/' element={<ProfileContainer />} />
                         <Route path='/dialogs/*' element={
                            <Suspense fallback={<Preloader/>} > <DialogsContainer/></Suspense>
                            }/>
@@ -41,7 +42,9 @@ const App = () => {
                         {/*<Route path='/news' element={<News/>}/>*/}
                         {/*<Route path='/music' element={<Music/>}/>*/}
                         {/*<Route path='/settings' element={<Settings/>}/>*/}
+                        {/*<Route path='/settings' element={<SettingsContainer />} />*/}
                     </Routes>
+
                 </div>
             </div>
 

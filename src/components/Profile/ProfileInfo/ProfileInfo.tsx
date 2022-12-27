@@ -1,11 +1,14 @@
 import React, {ChangeEvent, FC, useState} from "react";
 import s from './ProfileInfo.module.css';
+
 import {Preloader} from "../../common/Preloader/Preloader";
 import {ProfileInfoPropsType} from "../Profile";
 import ProfileStatus from "./ProfileStatus";
 import userPhoto from "../../../assets/images/user.jpeg";
 import {ProfileType} from "../../../redux/profile-reducer";
 import {ContactsType} from "../../../api/api";
+import {ProfileDataForm} from "./ProfileDataForm";
+import {LoginForm} from "../../Forms/LoginForm";
 
 type ContactsPropsType = {
     contactTitle: string
@@ -39,14 +42,13 @@ const ProfileData: FC<ProfileDataPropsType> = ({profile, isOwner, enableEditMode
             <div>
                 <b>My professional skills</b>: {profile.lookingForAJobDescription}
             </div>}
-
         <div>
             <p><b>Contacts</b>:</p>
             {contactsList}
         </div>
         {isOwner &&
             <div>
-                <button onClick={enableEditMode}>Edit</button>
+                <button className={s.button} onClick={enableEditMode}>Edit profile</button>
             </div>
         }
     </div>
@@ -79,12 +81,13 @@ export const ProfileInfo: FC<ProfileInfoPropsType> = (
                 <img src={profile.photos.large || userPhoto} alt={'avatar'} className={s.mainPhoto}/>
                 {isOwner && <input type={'file'} onChange={changeProfileAvatar}/>}
 
-                {editMode ? <ProfileDataForm initialValues={profile}
-                                             onSubmit={onSubmit}
-                                             profile={profile}/> :
-                    <ProfileData profile={profile}
-                                 isOwner={isOwner}
-                                 enableEditMode={() => setEditMode(true)}/>}
+                {editMode
+                    ? <ProfileDataForm initialValues={profile}
+                                       onSubmit={onSubmit}
+                                       profile={profile}/>
+                    : <ProfileData profile={profile}
+                                   isOwner={isOwner}
+                                   enableEditMode={() => setEditMode(true)}/>}
                 <ProfileStatus status={status} updateStatus={updateStatus}/>
             </div>
         </div>
@@ -92,29 +95,9 @@ export const ProfileInfo: FC<ProfileInfoPropsType> = (
 
 }
 
-const ProfileDataForm = ({profile}: any) => {
-    return <div>
-        <div>
-            <b>Full name</b>: {profile.fullName}
-        </div>
-        <div>
-            <b>Looking for a job</b>: {profile.lookingForAJob ? 'yes' : 'no'}
-        </div>
-        {profile.lookingForAJob &&
-            <div>
-                <b>My professional skills</b>: {profile.lookingForAJobDescription}
-            </div>}
-        <div>
-            <b>About me</b>: {profile.aboutMe}
-        </div>
-        <div>
-            <b>Contacts</b>: {Object.keys(profile.contacts).map(key => {
-            return <Contact key={key} contactTitle={key} contactValue={profile.contacts > [key]}/>
-        })}
-        </div>
-    </div>
 
-}
+
+
 
 
 

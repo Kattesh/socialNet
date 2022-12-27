@@ -19,7 +19,6 @@ export type ThunkType<ReturnType = void> = ThunkAction<ReturnType, StateType, un
 let rootReducer = combineReducers({
     profilePage: profileReducer,
     dialogsPage: dialogsReducer,
-    sidebar: sidebarReducer,
     usersPage: usersReducer,
     auth: authReducer,
     app: appReducer

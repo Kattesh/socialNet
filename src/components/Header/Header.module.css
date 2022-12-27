@@ -1,17 +1,38 @@
 .header {
-    grid-area: h;
-    background-color: rgb(61, 75, 18);
+    width: 100%;
+    background:rgb(61, 75, 18);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 15px 0;
 }
+
 .header img {
     width: 70px;
-    margin-top: 10px;
+    margin: 10px;
 }
-.loginBlock{
-    float: right;
-    color:wheat;
-    font-size: 20px;
-    padding: 10px;
+
+.login {
+    color: #fff;
 }
-.loginBlock a{
-    color:white;
+
+.login button {
+    background-color: #ded494;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: #222222;
+    cursor: pointer;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 10px;
+    outline: none;
+    padding: 8px 10px;
+    position: relative;
+    text-align: center;
+}
+
+.login button:hover {
+    opacity: .8;
 }

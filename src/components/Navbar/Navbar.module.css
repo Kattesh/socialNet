@@ -1,18 +1,29 @@
 .nav {
-    grid-area: n;
-    background-color: rgb(35, 45, 36);
-    padding: 20px;
+    display: flex;
 }
 
-.item a{
-    
-    margin: 10px;
+.item {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-left: 20px;
+    letter-spacing: 1px;
+}
+
+.link {
+    color: #054e17;
+    text-decoration: none;
+}
+
+.link svg, .active svg {
+    margin-right: 4px;
+}
+
+.link:hover {
+    color: #71a77e;
+
+}
+
+.active {
     color: aliceblue;
     text-decoration: none;
-    font-size: 22px;
-    text-transform: uppercase;
-}
-
-.item a.activeLink {
-    color: gold;
 }

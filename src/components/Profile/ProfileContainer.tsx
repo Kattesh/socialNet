@@ -3,10 +3,21 @@ import Profile from "./Profile";
 import {connect} from "react-redux";
 import {StateType, ThunkType} from "../../redux/redux-store";
 import {getStatus, getUserProfileTC, ProfileType, savePhoto, updateStatus} from "../../redux/profile-reducer";
-import {Location, NavigateFunction, Params, useLocation, useNavigate, useParams} from "react-router-dom";
+import {
+    Location,
+    NavigateFunction,
+    Params,
+    useLocation,
+    useNavigate,
+    useParams
+} from "react-router-dom";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
 
+
+type PathParamsType = {
+    userId: string
+};
 type MapStatePropsType = {
     profile: ProfileType | null
     status: string
@@ -17,11 +28,13 @@ type MapDispatchPropsType = {
     getUserProfileTC: (userId: number) => ThunkType
     getStatus: (userId: number) => void
     updateStatus: (status: string) => void
-    savePhoto: (file: any) => void
+    savePhoto: (file: File) => void
     saveProfile: (profile: ProfileType) => Promise<{}>
 }
 
+
 type WithRouterType = Location & NavigateFunction & Readonly<Params>
+
 
 class ProfileContainer extends React.Component<MapStatePropsType & MapDispatchPropsType & { router: any }, any> {
 

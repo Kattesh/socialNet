@@ -5,11 +5,27 @@
 .mainPhoto {
     max-width: 150px;
     border-radius: 10px;
-
 }
 
 .contact {
     padding-left: 10px;
-    color:white;
+    color: white;
+}
+
+.button {
+    background-color: #ded494;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: #222222;
+    cursor: pointer;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 10px;
+    outline: none;
+    padding: 8px 23px;
+    position: relative;
+    text-align: center;
 }
 
